@@ -66,12 +66,16 @@ final class RealCall implements Call {
   }
 
   @Override public Response execute() throws IOException {
+    
+    // 判断call是否执行过，可以看出每个Call对象只能使用一次原则。
     synchronized (this) {
       if (executed) throw new IllegalStateException("Already Executed");
       executed = true;
     }
+    // captureCallStackTrace()这个方法其实是捕获了这个请求的StackTrace。
     captureCallStackTrace();
     eventListener.callStart(this);
+    // 关键部分
     try {
       client.dispatcher().executed(this);
       Response result = getResponseWithInterceptorChain();
@@ -87,6 +91,7 @@ final class RealCall implements Call {
 
   private void captureCallStackTrace() {
     Object callStackTrace = Platform.get().getStackTraceForCloseable("response.body().close()");
+    // 在这个方法里面什么都没做就是set一个object进去
     retryAndFollowUpInterceptor.setCallStackTrace(callStackTrace);
   }
 
