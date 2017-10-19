@@ -44,13 +44,13 @@ public final class Dispatcher {
   /** Executes calls. Created lazily. */
   private @Nullable ExecutorService executorService;
 
-  /** Ready async calls in the order they'll be run. */
+  /** Ready async calls in the order they'll be run. 存放了等待执行任务Call的双向队列 */
   private final Deque<AsyncCall> readyAsyncCalls = new ArrayDeque<>();
 
-  /** Running asynchronous calls. Includes canceled calls that haven't finished yet. */
+  /** Running asynchronous calls. Includes canceled calls that haven't finished yet. 异步请求任务Call的双向任务队列*/
   private final Deque<AsyncCall> runningAsyncCalls = new ArrayDeque<>();
 
-  /** Running synchronous calls. Includes canceled calls that haven't finished yet. */
+  /** Running synchronous calls. Includes canceled calls that haven't finished yet.存放同步请求的双向队列 */
   private final Deque<RealCall> runningSyncCalls = new ArrayDeque<>();
 
   public Dispatcher(ExecutorService executorService) {
